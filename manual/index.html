@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wing Point House Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: a guest manual — photo cover, a sticky contents rail on wide screens, then short numbered-free sections a guest scans on a phone at the door. */
+:root{
+  --paper:#F5F6F2; --card:#FFFFFF; --ink:#1A2422; --muted:#5A6764; --teal:#1F6F78; --teal-soft:#DCEDEE; --sun:#E3A72F; --line:#D8DED9; --warn:#B4442E;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Figtree","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#121817;--card:#1A2220;--ink:#E6ECEA;--muted:#9FAEAA;--teal:#6CC3CB;--teal-soft:#1D3436;--sun:#EBB94E;--line:#2C3735;--warn:#F08A72;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121817;--card:#1A2220;--ink:#E6ECEA;--muted:#9FAEAA;--teal:#6CC3CB;--teal-soft:#1D3436;--sun:#EBB94E;--line:#2C3735;--warn:#F08A72;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.05rem;line-height:1.6;margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+p,ul,ol{margin:0}
+a{color:var(--teal)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+img{display:block;max-width:100%;height:auto;border-radius:6px}
+
+.cover{position:relative}
+.cover img{width:100%;height:clamp(220px,42vw,460px);object-fit:cover;border-radius:0}
+.cover-text{max-width:1100px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:28px 8px}
+.kicker{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+.cover h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin-top:8px}
+.cover .sub{color:var(--muted);margin-top:10px;max-width:60ch;font-size:1.1rem}
+.quick{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.quick span{background:var(--teal-soft);color:var(--ink);border-radius:999px;padding:6px 14px;font-family:var(--display);font-weight:600;font-size:.92rem}
+
+.shell{max-width:1100px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 64px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;display:grid;gap:6px;font-family:var(--display);font-size:.92rem}
+.toc a{color:var(--muted);text-decoration:none;padding:3px 0}
+.toc a:hover{color:var(--ink)}
+.content{display:grid;gap:20px;min-width:0}
+
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:clamp(20px,3vw,32px);scroll-margin-top:20px}
+section h2{font-size:1.6rem;font-weight:800;letter-spacing:-.01em;display:flex;gap:10px;align-items:baseline}
+section h2 .ic{font-size:1.3rem}
+section h3{font-size:1.1rem;font-weight:700;margin-top:20px}
+section > p, section > ul, section > ol, .stack > *{margin-top:12px}
+ul,ol{padding-left:1.2em}
+li{margin-top:6px}
+.muted{color:var(--muted)}
+.note{background:var(--teal-soft);border-radius:8px;padding:12px 16px;margin-top:14px}
+.warnnote{border-left:4px solid var(--warn);padding:8px 14px;margin-top:14px;background:color-mix(in srgb,var(--warn) 8%,var(--card))}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+figure{margin:0}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding-left:40px;margin-top:12px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--teal);color:var(--card);font-family:var(--display);font-weight:700;font-size:.85rem;display:grid;place-items:center}
+
+.kv{display:grid;grid-template-columns:auto 1fr auto;gap:10px 16px;align-items:center;margin-top:16px}
+.kv dt{font-family:var(--display);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kv dd{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1.05rem;font-weight:600;overflow-wrap:anywhere}
+.copy{font-family:var(--display);font-weight:600;font-size:.85rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.rules div{border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center;font-family:var(--display);font-weight:600}
+.rules div span{display:block;font-size:1.6rem}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:.98rem}
+td{border-top:1px solid var(--line);padding:8px 4px;vertical-align:top}
+td:first-child{font-weight:600;padding-right:16px;white-space:nowrap}
+.checklist{list-style:none;padding:0}
+.checklist li{padding-left:30px;position:relative}
+.checklist li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:800}
+.recs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin-top:12px;padding:0;list-style:none}
+.recs li{margin:0}
+.recs b{font-weight:600}
+.thanks{text-align:center;background:var(--teal);color:var(--card);border:none}
+.thanks h2{justify-content:center}
+.thanks p{max-width:52ch;margin-inline:auto}
+
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .toc{position:static;display:flex;flex-wrap:wrap;gap:6px 14px}
+  .grid3,.rules{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .recs{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:480px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+</style>
+
+<header class="cover">
+  <img src="img/low_living.jpg" alt="The apartment's living room with teal sofas, plants and art" width="1440" height="960">
+  <div class="cover-text">
+    <p class="kicker">House manual · Bainbridge Island, WA</p>
+    <h1>Welcome to your garden apartment</h1>
+    <p class="sub">A private 2,000 sq ft lower floor with its own entrance, hot tub, gym and garden, surrounded by art and books. Everything you need for your stay is on this page.</p>
+    <div class="quick"><span>Check-in 4:00 pm</span><span>Check-out 10:00 am</span><span>Up to 8 guests</span><span>Wi-Fi below</span></div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Contents">
+    <a href="#arrival">Arrival</a>
+    <a href="#parking">Parking</a>
+    <a href="#wifi">Wi-Fi</a>
+    <a href="#apartment">The apartment</a>
+    <a href="#hottub">Hot tub</a>
+    <a href="#gym">Gym</a>
+    <a href="#outdoors">Garden &amp; golf course</a>
+    <a href="#rules">House rules</a>
+    <a href="#practical">Trash &amp; safety</a>
+    <a href="#nearby">Nearby</a>
+    <a href="#checkout">Check-out</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <main class="content">
+    <section id="arrival">
+      <h2><span class="ic" aria-hidden="true">🗝️</span>Arrival</h2>
+      <p><b>11391 NE Wing Point Way, Bainbridge Island, WA 98110</b> · <a href="https://www.google.com/maps/search/?api=1&query=11391+NE+Wing+Point+Way+Bainbridge+Island+WA+98110" target="_blank" rel="noopener">Open in Google Maps</a></p>
+      <p>Check-in is from <b>4:00 pm</b>. Entry is keyless: your door code arrives as an Airbnb message before you arrive.</p>
+      <div class="grid2">
+        <figure><img src="img/arr_aerial.jpg" alt="Aerial view of the house among trees by Puget Sound" loading="lazy"><figcaption>The house sits between the golf course and Puget Sound.</figcaption></figure>
+        <figure><img src="img/arr_way.jpg" alt="Front of the house with an arrow pointing to the path around the back" loading="lazy"><figcaption>The apartment entrance is at the back of the house.</figcaption></figure>
+      </div>
+      <h3>Getting in</h3>
+      <ol class="steps">
+        <li>This is a freestanding house. Your apartment is the lowest floor, with a private entrance at the back. Don't use the main front door.</li>
+        <li>Walk around the house using the grassy incline with stone steps on the right (recommended) or the stairs on the left. Signs point the way.</li>
+        <li>On the grassy route, the first doors you reach are the patio doors. They're locked from the inside, so keep walking.</li>
+        <li>You'll also pass the gym door. Keep going to the door with the smart lock and enter your code.</li>
+      </ol>
+      <div class="grid2">
+        <figure><img src="img/arr_entrance.jpg" alt="Back of the house with the entrance and smart lock marked" loading="lazy"><figcaption>Entrance with the smart lock.</figcaption></figure>
+        <figure><img src="img/arr_patio.jpg" alt="Back of the house with the patio door marked and an arrow to keep walking" loading="lazy"><figcaption>Patio doors: keep walking.</figcaption></figure>
+      </div>
+      <p class="warnnote">The stairs and the grassy path can be slippery or muddy when it rains. Please take care.</p>
+    </section>
+
+    <section id="parking">
+      <h2><span class="ic" aria-hidden="true">🅿️</span>Parking</h2>
+      <p>Two dedicated spaces by the house. Free street parking is also available nearby. Please don't park in front of the garage doors.</p>
+      <div class="grid3">
+        <figure><img src="img/arr_park1.jpg" alt="Gravel parking area beside the road, marked available" loading="lazy"><figcaption>Available</figcaption></figure>
+        <figure><img src="img/arr_park2.jpg" alt="Car parked in the side space, marked available" loading="lazy"><figcaption>Available</figcaption></figure>
+        <figure><img src="img/arr_noparking.jpg" alt="Garage doors crossed out in red" loading="lazy"><figcaption>Please don't park here</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="wifi">
+      <h2><span class="ic" aria-hidden="true">📶</span>Wi-Fi</h2>
+      <p>The network name and password are in your Airbnb message sent the day before arrival, and on the card inside the apartment.</p>
+    </section>
+
+    <section id="apartment">
+      <h2><span class="ic" aria-hidden="true">🛋️</span>The apartment</h2>
+      <div class="grid2">
+        <figure><img src="img/low_sleeping.jpg" alt="Open sleeping area with two queen beds" loading="lazy"></figure>
+        <figure><img src="img/low_library.jpg" alt="Bedroom lined with bookshelves" loading="lazy"></figure>
+      </div>
+      <table>
+        <tr><td>Sleeping</td><td>Open sleeping area with two queen beds, one bedroom with a queen, one bedroom with a double.</td></tr>
+        <tr><td>Kitchen</td><td>Fully equipped, with a coffee maker and kettle.</td></tr>
+        <tr><td>Bathroom</td><td>One full bathroom. Bathrobes, toiletries and body lotion are provided.</td></tr>
+        <tr><td>Books &amp; films</td><td>Thousands of books and a DVD collection, from Indiana Jones and Monty Python to Hitchcock and The Lord of the Rings. Enjoy them here; please put them back and don't take them with you.</td></tr>
+        <tr><td>Art supplies</td><td>The art supplies on display are decoration. If you'd like to paint, ask us about a spare set for a small fee.</td></tr>
+        <tr><td>Heating</td><td>Heating throughout. No air conditioning.</td></tr>
+        <tr><td>Laundry</td><td>No washer or dryer in the apartment.</td></tr>
+      </table>
+    </section>
+
+    <section id="hottub">
+      <h2><span class="ic" aria-hidden="true">♨️</span>Hot tub</h2>
+      <p>Your private hot tub is on the garden patio, open all year and 24 hours, with room for up to seven.</p>
+      <h3>Using the cover</h3>
+      <ul>
+        <li>Unhook all the hooks around the tub before lifting the lid.</li>
+        <li>Lay the lid and cover upside down on the ground, clean side up, so no dirt gets into the water.</li>
+        <li>Put both the lid and the cover back after every use. It keeps the water warm and saves energy.</li>
+      </ul>
+      <figure style="margin-top:14px"><img src="img/jac_cover.jpg" alt="Hot tub cover laid clean side up, and the hooks around the tub circled" loading="lazy"></figure>
+      <h3>Control panel</h3>
+      <ul>
+        <li><b>Power:</b> if the tub is off, press the power button until the lights come on.</li>
+        <li><b>Unlock:</b> press and hold the lock button for 3–5 seconds before using the panel.</li>
+        <li><b>Temperature:</b> press the temperature button, then use the arrows. You can switch between °F and °C. Heating can take several hours, so keep the lid on while it warms up.</li>
+        <li><b>Bubbles:</b> press the bubbles button to start the jets.</li>
+      </ul>
+      <figure style="margin-top:14px"><img src="img/jac_panel.jpg" alt="Hot tub control panel with the power, lock, temperature and bubbles buttons labeled" loading="lazy"></figure>
+      <p class="note">Please take a quick shower before getting in, and rinse off afterwards. The water contains chlorine, which can dry your skin, and there's lotion in the bathroom.</p>
+    </section>
+
+    <section id="gym">
+      <h2><span class="ic" aria-hidden="true">🏋️</span>Gym</h2>
+      <figure style="margin-top:14px"><img src="img/low_gym.jpg" alt="Home gym with machines and weights" loading="lazy"></figure>
+      <p>The gym is next to the apartment and you're welcome to use it. Its key hangs by your apartment entrance; please lock up and return it to the hook after each visit. The gym has a small toilet (no shower). Yoga mats are there for the gym or the garden.</p>
+      <p class="muted">The gym also holds some of the owners' storage, including spare paintings. Please don't move or touch personal items. The owners may occasionally use it.</p>
+    </section>
+
+    <section id="outdoors">
+      <h2><span class="ic" aria-hidden="true">🌲</span>Garden &amp; golf course</h2>
+      <div class="grid2">
+        <figure><img src="img/low_patio.jpg" alt="Covered patio with white wicker furniture" loading="lazy"></figure>
+        <figure><img src="img/arr_golf.jpg" alt="Aerial view of the golf course beside the house" loading="lazy"></figure>
+      </div>
+      <p>The patio, garden and hanging chair are yours. The hanging chair holds up to 220 lbs; please climb in from the sides, not the end.</p>
+      <p>You can walk the golf course paths from the back of the house, but only early in the morning (before about 7–8 am) or in the early evening (around 7–8 pm, later in summer), and only when no golfers are on the course. Once golfers are out, please stay off: the club doesn't allow it and stray balls are a real risk. Playing golf isn't permitted.</p>
+      <p class="warnnote">The backyard isn't fenced. You may see bald eagles, deer, rabbits, squirrels, tree frogs and sometimes sea otters, and occasionally coyotes at night. Please don't leave small children outside alone.</p>
+    </section>
+
+    <section id="rules">
+      <h2><span class="ic" aria-hidden="true">⚠️</span>House rules</h2>
+      <div class="rules">
+        <div><span aria-hidden="true">🚭</span>No smoking or vaping</div>
+        <div><span aria-hidden="true">🐾</span>No pets</div>
+        <div><span aria-hidden="true">🎉</span>No parties or events</div>
+      </div>
+      <ul>
+        <li>Please treat our home as you would your own, and report any damage.</li>
+        <li>Turn off lights and appliances and lock the doors when you go out. The panoramic living-room doors lock from the inside.</li>
+        <li>Only registered guests may stay. If you're unsure about guests or daytime visitors, message us first.</li>
+      </ul>
+      <table>
+        <tr><td>Smoking on the property</td><td>$500</td></tr>
+        <tr><td>Late check-out</td><td>$30 for the first hour, $100 for two hours, $500 beyond that. Ask in advance and we'll accommodate you when we can.</td></tr>
+        <tr><td>Extra guests</td><td>$50 per guest per night, or we may ask them to leave</td></tr>
+        <tr><td>Bathrobe taken home</td><td>$100 each</td></tr>
+        <tr><td>Toiletries taken home</td><td>$30</td></tr>
+      </table>
+    </section>
+
+    <section id="practical">
+      <h2><span class="ic" aria-hidden="true">🚮</span>Trash &amp; safety</h2>
+      <h3>Trash and recycling</h3>
+      <p>Bins are on the left side of the house. Please bag all trash. Collection is on <b>Tuesdays</b>: the black bin (trash) every week, the blue bin (recycling) every other week.</p>
+      <h3>Safety</h3>
+      <ul>
+        <li>Smoke detector, carbon monoxide detector and a noise monitor are installed.</li>
+        <li>Fire extinguisher: next to the kitchen cabinets, between the bathroom and the kitchen.</li>
+        <li>Fire blanket: in one of the kitchen drawers.</li>
+        <li>Exterior security cameras are in place.</li>
+      </ul>
+      <h3>In an emergency</h3>
+      <table>
+        <tr><td>Emergency</td><td>Call 911 for police, fire or ambulance</td></tr>
+        <tr><td>Hospital</td><td>Virginia Mason Bainbridge Island Medical Center, 380 Winslow Way E</td></tr>
+        <tr><td>Urgent care</td><td>Bainbridge Island Urgent Care, 8804 Madison Ave N</td></tr>
+      </table>
+    </section>
+
+    <section id="nearby">
+      <h2><span class="ic" aria-hidden="true">📍</span>Nearby</h2>
+      <h3>Getting around</h3>
+      <ul>
+        <li><b>Ferry to Seattle:</b> the terminal is a 5-minute drive or about a 15–30 minute walk. The crossing takes 35 minutes.</li>
+        <li><b>BI Ride:</b> on-demand island bus, $2 or less per ride, booked in the Ride Pingo app.</li>
+        <li><b>Uber</b> runs on the island but isn't always reliable, so book ahead.</li>
+      </ul>
+      <h3>Walks and parks</h3>
+      <ul class="recs">
+        <li><b>Hawley Cove Park</b> · 5-minute walk, boardwalk and shoreline</li>
+        <li><b>Bloedel Reserve</b> · gardens and wildlife</li>
+        <li><b>Fay Bainbridge Park</b> · beach, views of Rainier and the Cascades</li>
+        <li><b>Rockaway Beach Park</b> · Seattle skyline views</li>
+        <li><b>Grand Forest</b> · quiet, flat forest trails</li>
+        <li><b>Gazzam Lake Preserve</b> · 445 acres of forest and wetland</li>
+        <li><b>Fort Ward &amp; Blakely Harbor</b> · hiking, kayaking, birdwatching</li>
+        <li><b>Japanese American Exclusion Memorial</b> · at Pritchard Park</li>
+        <li><b>Bainbridge Island Museum of Art</b> · free, open daily</li>
+        <li><b>Frog Rock</b> · the island's favorite photo stop</li>
+      </ul>
+      <h3>Eat and drink</h3>
+      <ul class="recs">
+        <li><b>Pegasus Coffee House</b> · island classic ($)</li>
+        <li><b>Blackbird Bakery</b> · pastries and coffee ($$)</li>
+        <li><b>Harbour Public House</b> · pub food, water views ($$)</li>
+        <li><b>BaSa</b> · Vietnamese ($$)</li>
+        <li><b>Hi Life</b> · poke and Japanese ($$)</li>
+        <li><b>The Madison Diner</b> · American diner ($$)</li>
+        <li><b>Proper Fish</b> · fish and chips ($)</li>
+        <li><b>Seabird</b> · sustainable seafood ($$$)</li>
+        <li><b>Agate</b> · seasonal fine dining ($$$)</li>
+      </ul>
+      <h3>Groceries and shopping</h3>
+      <ul>
+        <li><b>Town &amp; Country Market</b> and <b>Safeway</b> for groceries.</li>
+        <li><b>Bainbridge Island Farmers Market</b>, Saturdays April to December.</li>
+        <li><b>Winslow Way</b> for boutiques, bookstores, galleries and cafés.</li>
+      </ul>
+    </section>
+
+    <section id="checkout">
+      <h2><span class="ic" aria-hidden="true">✅</span>Check-out</h2>
+      <p>Check-out is at <b>10:00 am</b>. Before you go:</p>
+      <ul class="checklist">
+        <li>Turn off the lights and appliances.</li>
+        <li>Put the hot tub lid and cover back on and hook them closed.</li>
+        <li>Close and lock all windows and doors, including the patio doors.</li>
+        <li>Lock the gym and return its key to the hook.</li>
+        <li>Put books and DVDs back where you found them.</li>
+        <li>Check for your belongings.</li>
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2><span class="ic" aria-hidden="true">📞</span>Contact</h2>
+      <p>Message us anytime through Airbnb. You can also reach our team by phone:</p>
+      <dl class="kv">
+        <dt>Phone</dt><dd id="team-phone">+1 206 855 8210</dd><button class="copy" type="button" data-copy="team-phone">Copy</button>
+      </dl>
+      <p class="muted">If you can't find the entrance or something isn't working, reach out. We're happy to help.</p>
+    </section>
+
+    <section class="thanks">
+      <h2>Thank you for staying with us</h2>
+      <p style="margin-top:12px">We hope the island, the art and the quiet give you exactly the stay you came for. We'd love to welcome you back.</p>
+      <p style="margin-top:16px;font-family:var(--display);font-weight:700">Eva &amp; Kasia</p>
+    </section>
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el=document.getElementById(btn.dataset.copy); var txt=el.textContent.trim();
+    var done=function(){btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy'},1500)};
+    try{ navigator.clipboard.writeText(txt).then(done, function(){ sel(el); }); }catch(e){ sel(el); }
+  });
+});
+function sel(el){var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}
+</script>
+
+</html>
