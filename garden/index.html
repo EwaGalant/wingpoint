@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wing Point Garden Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+/* Layout: sister site to the whole-house page — same catalogue structure, warmer garden palette (teal sofas, marigold cushions) for the lower-floor apartment. */
+:root{
+  --paper:#F4F3EE; --surface:#E7ECEA; --ink:#1B2526; --muted:#56625F; --teal:#1E6670; --marigold:#C8862A; --line:#CCD3D0;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#121819;--surface:#1B2425;--ink:#E6ECEB;--muted:#A1AEAB;--teal:#73C1CA;--marigold:#E3A954;--line:#2F3B3C;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121819;--surface:#1B2425;--ink:#E6ECEB;--muted:#A1AEAB;--teal:#73C1CA;--marigold:#E3A954;--line:#2F3B3C;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.125rem;line-height:1.6;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);line-height:1.05;text-wrap:balance;margin:0}
+h2{font-size:clamp(2rem,4.5vw,3.25rem);font-weight:800;letter-spacing:-.02em}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+a{color:inherit}
+a:focus-visible,.btn:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
+img{display:block;max-width:100%;height:auto}
+
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;letter-spacing:-.01em;text-decoration:none}
+.links{display:flex;gap:20px;font-family:var(--display);font-size:.9rem;flex-wrap:wrap}
+.links a{text-decoration:none;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.btn{display:inline-block;font-family:var(--display);font-weight:600;text-decoration:none;background:var(--teal);color:var(--paper);padding:12px 20px;border-radius:999px}
+.btn:hover{filter:brightness(1.08)}
+
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(24px,4vw,56px);align-items:end;padding-block:clamp(32px,6vw,72px)}
+.hero h1{font-size:clamp(2.6rem,7vw,5.6rem);font-weight:800;letter-spacing:-.035em}
+.hero h1 em{font-family:var(--body);font-style:italic;font-weight:400;color:var(--marigold)}
+.hero .lede{margin-top:20px;max-width:36ch;font-size:1.3rem;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:28px;font-family:var(--display);font-size:.95rem}
+.facts span b{font-weight:800;font-size:1.4rem;display:block;font-variant-numeric:tabular-nums}
+.hero figure{margin:0}
+.hero{align-items:center}
+.collage{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.collage img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}
+.collage img.big{grid-column:1/-1;aspect-ratio:3/2}
+.collage figcaption{grid-column:1/-1;margin-top:0}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:8px;font-style:italic}
+.cta-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:32px}
+.badge{display:inline-flex;gap:8px;align-items:center;font-family:var(--display);font-weight:600;font-size:.95rem;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--surface)}
+.badge b{color:var(--marigold);font-variant-numeric:tabular-nums}
+
+section{padding-block:clamp(48px,8vw,96px);border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;align-items:end;margin-bottom:40px}
+.sec-head p{color:var(--muted);max-width:52ch}
+
+.room{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,48px);align-items:start;padding-block:32px}
+.room + .room{border-top:1px dashed var(--line)}
+.room.flip > :first-child{order:2}
+.room .tag{font-family:var(--display);font-weight:800;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--marigold)}
+.room h3{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-top:6px;letter-spacing:-.02em}
+.room ul{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.room li{padding-left:18px;position:relative}
+.room li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:2px;background:var(--teal)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
+.pair img:first-child{grid-column:1/-1;aspect-ratio:3/2}
+
+.well{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:clamp(18px,2.5vw,26px)}
+.card-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px;margin-bottom:16px}
+.well h3{font-size:1.45rem;font-weight:800;letter-spacing:-.01em;margin:6px 0 10px}
+.well .card p:last-child{color:var(--muted)}
+
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.strip img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}
+
+.island{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center}
+.island img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
+.route{display:grid;grid-template-columns:auto 1fr;gap:14px 18px;margin-top:24px;font-variant-numeric:tabular-nums}
+.route b{font-family:var(--display);font-weight:800;font-size:1.5rem;color:var(--teal)}
+
+.stay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:10px 20px;margin:16px 0 0}
+dt{font-family:var(--display);font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+dd{margin:0}
+.rules{display:grid;gap:12px;margin-top:8px}
+
+footer{border-top:1px solid var(--line);padding-block:48px;color:var(--muted);font-size:.95rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:860px){
+  .hero,.sec-head,.room,.island,.stay{grid-template-columns:minmax(0,1fr)}
+  .room.flip > :first-child{order:0}
+  .hero figure{order:-1}
+  .well{grid-template-columns:minmax(0,1fr)}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .links{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .hero figure img.big{animation:settle 1.2s ease-out both}
+  @keyframes settle{from{transform:scale(1.03)}to{transform:none}}
+}
+</style>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Wing Point Garden Suite</a>
+    <div class="links"><a href="#rooms">The apartment</a><a href="#wellness">Hot tub &amp; gym</a><a href="#stay">Your stay</a><a href="#island">The island</a></div>
+    <a class="btn" href="https://www.airbnb.com/rooms/1533722062467019468" target="_blank" rel="noopener">Book on Airbnb</a>
+  </div>
+</nav>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">Bainbridge Island, Washington</p>
+      <h1>A private garden apartment <em>full of art and books.</em></h1>
+      <p class="lede">2,000 square feet on the lower floor of our island home, with its own entrance, hot tub, gym and garden. Nothing is shared, and it's a 15-minute walk to the Seattle ferry.</p>
+      <div class="facts">
+        <span><b>2,000</b>sq ft</span>
+        <span><b>3</b>bedrooms</span>
+        <span><b>4</b>beds</span>
+        <span><b>8</b>guests</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="https://www.airbnb.com/rooms/1533722062467019468" target="_blank" rel="noopener">See dates and prices</a>
+        <span class="badge"><b>★ 4.89</b> Guest favorite on Airbnb</span>
+      </div>
+    </div>
+    <figure class="collage">
+      <img class="big" src="img/low_living.jpg" alt="Bright living room with teal sofas, marigold cushions, plants and art" width="1440" height="960">
+      <img src="img/low_hottub.jpg" alt="Private hot tub on the covered garden patio" width="1440" height="1920">
+      <img src="img/low_sleeping.jpg" alt="Open sleeping area with two queen beds" width="1440" height="960">
+      <figcaption>The living room, your private hot tub, and the open sleeping area.</figcaption>
+    </figure>
+  </div>
+
+  <section id="rooms">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The apartment</h2>
+        <p>Original oil paintings, sculpture and a library on spirituality, science and art fill every room. A calm place to rest, write, paint or simply slow down.</p>
+      </div>
+
+      <div class="room">
+        <div>
+          <p class="tag">Living &amp; dining</p>
+          <h3>Bright, open and made for gathering</h3>
+          <ul>
+            <li>Large living room with TV and a big collection of classic films on DVD</li>
+            <li>Separate dining area with a round table</li>
+            <li>Open kitchen with everything you need to cook, plus coffee maker and kettle</li>
+            <li>Panoramic doors straight out to the covered patio</li>
+          </ul>
+        </div>
+        <div class="pair">
+          <img src="img/low_dining.jpg" alt="Round dining table with blue chairs and bookshelves" loading="lazy" width="1440" height="960">
+          <img src="img/low_kitchen.jpg" alt="Open kitchen along one wall" loading="lazy" width="1440" height="960">
+          <img src="img/low_bath.jpg" alt="Bathroom with a deep blue vanity" loading="lazy" width="1440" height="960">
+        </div>
+      </div>
+
+      <div class="room flip">
+        <div>
+          <p class="tag">Sleeping</p>
+          <h3>Room for eight, in three spaces</h3>
+          <ul>
+            <li>Open sleeping area with two queen beds</li>
+            <li>Bedroom with a queen bed</li>
+            <li>Bedroom with a double bed, lined with books</li>
+            <li>One full bathroom, with bathrobes, toiletries and lotion provided</li>
+          </ul>
+        </div>
+        <div class="pair">
+          <img src="img/low_sleeping.jpg" alt="Open sleeping area with two queen beds in blue linens" loading="lazy" width="1440" height="960">
+          <img src="img/low_library.jpg" alt="Bedroom with floor-to-ceiling bookshelves and a red bedspread" loading="lazy" width="1440" height="960">
+          <img src="img/low_bed2.jpg" alt="Bedroom with books and art" loading="lazy" width="1440" height="960">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wellness">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Hot tub, gym and garden</h2>
+        <p>All private, all just for you. The owners' floor upstairs is empty during guest stays.</p>
+      </div>
+      <div class="well">
+        <article class="card">
+          <img class="card-img" src="img/low_hottub.jpg" alt="Hot tub on the covered garden patio" loading="lazy" width="1440" height="1920">
+          <p class="eyebrow">Hot tub</p>
+          <h3>Soak under the cedars</h3>
+          <p>A private hot tub on the garden patio, open all year and around the clock, with room for up to seven.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="img/low_gym.jpg" alt="Home gym with exercise machines and weights" loading="lazy" width="1440" height="960">
+          <p class="eyebrow">Gym &amp; yoga</p>
+          <h3>Your own gym</h3>
+          <p>A private gym next door with exercise equipment and yoga mats, plus an art and yoga space for slower mornings.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="img/low_patio.jpg" alt="Covered patio with white wicker furniture" loading="lazy" width="1440" height="960">
+          <p class="eyebrow">Garden</p>
+          <h3>A woodland retreat</h3>
+          <p>A covered patio, a hanging chair and a lawn wrapped in tall evergreens. Eagles, deer and rabbits visit, and the golf course paths are right behind the house.</p>
+        </article>
+      </div>
+      <div class="strip" style="margin-top:16px" aria-label="More of the garden">
+        <img src="img/low_garden.jpg" alt="Green lawn and evergreen trees" loading="lazy" width="1440" height="960">
+        <img src="img/low_blossom.jpg" alt="A flowering tree on the lawn in spring" loading="lazy" width="1440" height="960">
+        <img src="img/low_rainier.jpg" alt="Mount Rainier above the trees" loading="lazy" width="1440" height="1920">
+        <img src="img/low_bed3.jpg" alt="Bright corner of the apartment" loading="lazy" width="1440" height="960">
+      </div>
+    </div>
+  </section>
+
+  <section id="stay">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Your stay</h2>
+        <p>Booked through Airbnb, where you'll see live dates and prices. Our team is on hand through Airbnb messages for anything you need.</p>
+      </div>
+      <div class="stay">
+        <div class="card">
+          <p class="eyebrow">The essentials</p>
+          <dl>
+            <dt>Check-in</dt><dd>From 4:00 pm, self check-in with a smart lock</dd>
+            <dt>Checkout</dt><dd>By 10:00 am</dd>
+            <dt>Entrance</dt><dd>Private, at the back of the house</dd>
+            <dt>Parking</dt><dd>Free on site</dd>
+            <dt>Workspace</dt><dd>Dedicated desk and wifi</dd>
+            <dt>Heating</dt><dd>Heating throughout; no air conditioning</dd>
+          </dl>
+          <div class="cta-row"><a class="btn" href="https://www.airbnb.com/rooms/1533722062467019468" target="_blank" rel="noopener">Check availability</a></div>
+        </div>
+        <div>
+          <p class="eyebrow">House rules</p>
+          <div class="rules">
+            <p>Enjoy the art and books, and please keep them in the apartment.</p>
+            <p>No pets, no smoking or vaping, no parties or events.</p>
+            <p>Up to 8 guests.</p>
+            <p>The garden is unfenced and wild, so keep an eye on small children outdoors.</p>
+            <p>Golf course paths are open for walks early in the morning or in the evening when no one is playing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="island">
+    <div class="wrap island">
+      <div>
+        <p class="eyebrow">The island</p>
+        <h2 style="margin-top:8px">No car needed from Seattle</h2>
+        <div class="route">
+          <b>5–10 min</b><span>walk to Hawley Cove Park, a boardwalk and beach on Puget Sound with views of Mount Rainier</span>
+          <b>15 min</b><span>walk to the ferry terminal and downtown Winslow's cafés, galleries and shops</span>
+          <b>35 min</b><span>ferry crossing to downtown Seattle</span>
+        </div>
+        <p style="margin-top:24px;color:var(--muted)">Nearby: Bloedel Reserve, the Bainbridge Island Museum of Art, the Saturday farmers market, and forest trails at Gazzam Lake and Grand Forest.</p>
+      </div>
+      <img src="img/arr_aerial.jpg" alt="Aerial view of the house among evergreens beside the golf course and Puget Sound" loading="lazy" width="935" height="640">
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Wing Point Garden Suite · Bainbridge Island, WA</span>
+    <a href="https://www.airbnb.com/rooms/1533722062467019468" target="_blank" rel="noopener">View the listing on Airbnb</a>
+  </div>
+</footer>
+
+</html>
