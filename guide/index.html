@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the Wing Point radius</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Libre+Franklin:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sister to "the 400 Park radius" — masthead, sticky island map with distance rings on the left, filterable tables by cuisine and by kind of outing on the right. */
+:root{
+  --ground:#ECEFEA; --surface:#FAFBF8; --surface2:#E1E7E0; --sunk:#E4E9E2;
+  --ink:#14201C; --ink2:#4A554F; --ink3:#78837D; --rule:#CFD6CC; --rule2:#BCC5BA; --accent:#2F6B57; --water:#D5E3E6;
+  --c-ita:#A8423A; --c-jpn:#B0546F; --c-asia:#B8782A; --c-sea:#2C6E8E; --c-fine:#6B4E99; --c-mex:#C0662E; --c-amer:#5E6B33; --c-cafe:#8A5A3A; --c-wine:#7A2F4E;
+  --c-mus:#3D5FA8; --c-park:#2F7A4E; --c-shop:#6B6F5E; --c-kids:#C23B7A;
+  --shadow:0 1px 2px rgba(20,32,28,.06),0 8px 24px -12px rgba(20,32,28,.18);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#0F1412; --surface:#171D1A; --surface2:#1F2723; --sunk:#131916; --ink:#E9EDE8; --ink2:#A8B2AC; --ink3:#7B857F; --rule:#2A332E; --rule2:#3A443E; --accent:#7CC3A6; --water:#18272B;
+  --c-ita:#E58A80; --c-jpn:#E592AA; --c-asia:#E6AE60; --c-sea:#6FB4D6; --c-fine:#B29BE0; --c-mex:#EE9A62; --c-amer:#B3C27A; --c-cafe:#D3A07C; --c-wine:#D7809F; --c-mus:#8FA9EA; --c-park:#73C493; --c-shop:#B3B7A5; --c-kids:#F08CBB;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#0F1412; --surface:#171D1A; --surface2:#1F2723; --sunk:#131916; --ink:#E9EDE8; --ink2:#A8B2AC; --ink3:#7B857F; --rule:#2A332E; --rule2:#3A443E; --accent:#7CC3A6; --water:#18272B;
+  --c-ita:#E58A80; --c-jpn:#E592AA; --c-asia:#E6AE60; --c-sea:#6FB4D6; --c-fine:#B29BE0; --c-mex:#EE9A62; --c-amer:#B3C27A; --c-cafe:#D3A07C; --c-wine:#D7809F; --c-mus:#8FA9EA; --c-park:#73C493; --c-shop:#B3B7A5; --c-kids:#F08CBB;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:"Libre Franklin",-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1340px;margin:0 auto;padding-inline:clamp(16px,3vw,28px);padding-block:0 96px}
+a{color:inherit} h1,h2{text-wrap:balance;margin:0}
+.mast{padding-block:52px 28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--ink3);margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
+.eyebrow b{color:var(--accent)}
+h1{font-family:"Bodoni Moda",Didot,serif;font-weight:500;font-size:clamp(38px,6.2vw,72px);line-height:.98;letter-spacing:-.015em}
+h1 em{font-style:italic;color:var(--accent)}
+.dek{max-width:62ch;margin-top:18px;color:var(--ink2);font-size:16.5px}
+.flags{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:28px;border-radius:3px;overflow:hidden}
+.flag{background:var(--surface);padding:15px 17px}
+.flag h4{margin:0 0 5px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.flag p{margin:0;font-size:13.2px;color:var(--ink2)}
+.cols{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:40px;margin-top:36px;align-items:start}
+.cols>*{min-width:0}
+@media(max-width:1080px){.cols{grid-template-columns:minmax(0,1fr);gap:28px}}
+.mapcard{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);overflow:hidden}
+@media(max-width:1080px){.mapcard{position:static}}
+.maphead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 16px 11px;border-bottom:1px solid var(--rule)}
+.maphead h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:19px}
+.maphead span{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.mapbody{background:var(--water);padding:6px}
+svg.map{display:block;width:100%;height:auto}
+.ring{fill:none;stroke:var(--accent);stroke-dasharray:4 5;opacity:.55}
+.ringlab{fill:var(--accent);font-size:11px;font-weight:700;letter-spacing:.08em}
+.place{fill:var(--ink3);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.pin{cursor:pointer}
+.pin circle{stroke:var(--surface);stroke-width:1.5}
+.pin.dim{opacity:.12}
+.pin.hot circle{stroke:var(--ink);stroke-width:2.5}
+.home path{fill:var(--ink);stroke:var(--surface);stroke-width:2}
+.homelab{fill:var(--ink);font-size:12px;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px 14px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink2)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--rule)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-right:2px}
+button.chip{font:inherit;font-size:12px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--ink2);border:1px solid var(--rule);padding:6px 12px;border-radius:999px}
+button.chip:hover{color:var(--ink);border-color:var(--rule2)}
+button.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+button.chip:focus-visible,.seg button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:12px;font-weight:600;cursor:pointer;background:none;border:0;color:var(--ink3);padding:6px 12px;border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.search{flex:1;min-width:150px}
+.search input{font:inherit;font-size:13px;width:100%;padding:7px 12px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--ink)}
+.count{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+h2.part{font-family:"Bodoni Moda",serif;font-weight:500;font-size:34px;margin-top:40px;font-style:italic;color:var(--ink2)}
+section.grp{margin-top:34px;scroll-margin-top:16px}
+.grphead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--gc);padding-bottom:8px}
+.grphead h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:26px}
+.grphead .n{margin-left:auto;font-size:11.5px;color:var(--ink3);font-weight:600;font-variant-numeric:tabular-nums}
+.tblwrap{overflow-x:auto;border:1px solid var(--rule);border-top:0;border-radius:0 0 4px 4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+thead th{text-align:left;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink3);padding:10px 12px;border-bottom:1px solid var(--rule);background:var(--sunk);white-space:nowrap}
+tbody td{padding:12px;border-bottom:1px solid var(--rule);vertical-align:top;font-size:13.6px;color:var(--ink2)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.hot{background:var(--surface2)}
+td.nm{color:var(--ink);min-width:170px;width:26%}
+td.nm .num{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;font-size:10.5px;font-weight:700;color:var(--surface);background:var(--gc);margin-right:8px;font-variant-numeric:tabular-nums}
+td.nm a{font-weight:600;text-decoration:none;border-bottom:1px solid var(--rule2)}
+td.nm a:hover{border-bottom-color:var(--gc)}
+td.nm .sub{display:block;margin-top:3px;font-size:12px;color:var(--ink3);padding-left:27px}
+td.rt{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+td.rt small,td.wk small{display:block;font-weight:400;font-size:11px;color:var(--ink3)}
+td.rt.top{color:var(--accent)}
+td.wk{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+td.pr{white-space:nowrap;color:var(--ink3);font-weight:600}
+.empty{padding:22px 14px;color:var(--ink3)}
+#getting-around{margin-top:56px;scroll-margin-top:16px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}
+.tcard{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:18px 18px 16px;border-top:3px solid var(--tc,var(--accent))}
+.tcard h3{margin:0 0 4px;font-family:"Bodoni Moda",serif;font-weight:500;font-size:21px}
+.tcard .tag{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink3);margin-bottom:10px}
+.tcard p,.tcard li{font-size:13.6px;color:var(--ink2)}
+.tcard p{margin:0 0 8px}
+.tcard ol,.tcard ul{margin:6px 0 8px;padding-left:19px}
+.tcard li{margin-bottom:4px}
+.tcard a{color:var(--accent)}
+.tip{background:var(--sunk);border-left:3px solid var(--accent);padding:12px 14px;margin-top:16px;font-size:14px;color:var(--ink);border-radius:0 4px 4px 0}
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--rule);font-size:12.4px;color:var(--ink3);max-width:82ch}
+footer p{margin:0 0 9px} footer b{color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow"><span>11391 NE Wing Point Way · Bainbridge Island</span><b id="total"></b><span>researched Oct 2026</span><a href="#getting-around" style="color:var(--accent);text-decoration:none">getting around ↓</a></div>
+  <h1>the Wing Point <em>radius</em></h1>
+  <p class="dek">Where to eat, sorted by cuisine, and what to see, sorted by the kind of outing. Distances are from the house by road. Almost everything in Winslow is a half-hour walk or a five-minute drive.</p>
+  <div class="flags">
+    <div class="flag"><h4>the short version</h4><p>Special occasion: <b>Agate</b> or <b>Kingfisher</b>. Best-loved: <b>Nirvana</b> (4.8 from 5,500+ reviews) and <b>Hi Life</b>. The trip worth the drive: <b>Via Rosa 11</b> and <b>Bloedel Reserve</b>.</p></div>
+    <div class="flag"><h4>check the day</h4><p>Many island kitchens close one or two days a week. Kingfisher is Wednesday to Saturday only, Chez Lolo Thursday to Sunday. Closed days are listed under each walk time.</p></div>
+    <div class="flag"><h4>where the numbers come from</h4><p>Ratings and review counts are Google's, pulled in October 2026. Distances are road estimates from Wing Point Way, so allow a few extra minutes around Eagle Harbor.</p></div>
+  </div>
+</header>
+
+<div class="cols">
+  <aside class="mapcard">
+    <div class="maphead"><h2>the island</h2><span>schematic · north up</span></div>
+    <div class="mapbody"><svg class="map" id="map" role="img" aria-label="Map of Bainbridge Island with pins for each place and rings at 1, 3 and 6 miles from the house"></svg></div>
+    <div class="legend" id="legend"></div>
+  </aside>
+  <main>
+    <div class="controls">
+      <div class="chips" id="chips"></div>
+      <div class="seg" id="seg">
+        <button type="button" data-max="1.6" aria-pressed="false">Winslow</button>
+        <button type="button" data-max="3" aria-pressed="false">≤3 mi</button>
+        <button type="button" data-max="99" aria-pressed="true">all</button>
+      </div>
+      <div class="search"><input id="q" type="search" placeholder="search a name, dish, street…" aria-label="Search places"></div>
+      <div class="count" id="count"></div>
+    </div>
+    <div id="sections"></div>
+    <section id="getting-around">
+      <h2 class="part" style="margin-top:0">Getting around</h2>
+      <div class="tip"><b>Book your Uber ahead.</b> There are only a handful of drivers on the island, especially early mornings, evenings and when a ferry lands. For a ferry, airport run or dinner reservation, schedule the ride in the Uber app the day before (tap <i>Later</i> next to "Where to?"), not five minutes before you need it.</div>
+      <div class="tgrid">
+        <div class="tcard" style="--tc:var(--c-shop)"><h3>Uber &amp; Lyft</h3><div class="tag">reserve in advance</div>
+          <p>Both apps work on the island, but cars are few and often come over on the ferry from Seattle, so an on-demand request can take 20+ minutes or go unanswered.</p>
+          <ul><li>Schedule it: open Uber, tap <b>Later</b>, pick a time, then set pickup at the house.</li><li>For Sea-Tac, the ferry plus a Seattle-side Uber or the Link light rail is often quicker than a car around the Sound.</li><li>Coming back from Winslow late? Book the return when you set out.</li></ul></div>
+        <div class="tcard" style="--tc:var(--c-sea)"><h3>BI Ride + the Pingo app</h3><div class="tag">island shuttle · $2</div>
+          <p>Kitsap Transit's on-demand minibus covers most of the island: the ferry dock, Winslow, Bloedel Reserve, Lynwood Center, Battle Point and more. Adults $2, 18 and under ride free.</p>
+          <ol><li>Download <b>Ride Pingo</b> (App Store or Google Play) and create an account.</li><li>Enter the house as pickup and your destination; choose <b>now</b> or schedule up to 7 days ahead.</li><li>Walk to the pickup point the app gives you (the bus can't use some driveways or dead ends) and track it live.</li><li>Catching a ferry? Choose <b>Transit Connect</b> and enter the sailing time.</li></ol>
+          <p>Hours: weekdays 8:45am to 3:30pm, Saturdays 9am to 7pm (book via the app after 4pm). Or call 1-844-424-7433, 8am to 4pm. <a href="https://www.kitsaptransit.com/service/routed-buses/bi-ride" target="_blank" rel="noopener">Schedule &amp; Sunday service</a></p></div>
+        <div class="tcard" style="--tc:var(--c-mus)"><h3>The ferry to Seattle</h3><div class="tag">35 minutes · walk-on</div>
+          <p>Washington State Ferries run from Bainbridge to Seattle's Colman Dock throughout the day, roughly every hour. The terminal is roughly 18 minutes on foot from the house.</p>
+          <ul><li>Walk-on fares are collected only on the Seattle side, so the ride into Seattle is free and you pay on the way back.</li><li>Check sailing times in the <b>WSDOT</b> app or at <a href="https://wsdot.com/ferries/schedule/" target="_blank" rel="noopener">wsdot.com/ferries</a>; arrive 10 minutes early on foot.</li><li>From Colman Dock, Pike Place Market is a 10-minute walk.</li></ul></div>
+        <div class="tcard" style="--tc:var(--c-cafe)"><h3>Groceries &amp; delivery</h3><div class="tag">Instacart · DoorDash</div>
+          <ul><li><b>Instacart</b> delivers on the island, including from <b>Safeway</b> on High School Rd, usually same day.</li><li><b>Town &amp; Country Market</b> (Winslow) is the best local grocery for produce, the deli and wine, an easy stop on a walk into town.</li><li><b>DoorDash</b> has the widest restaurant choice here: Nirvana, Bainbridge Thai, Yoyo Poke, Westside Pizza and others. Uber Eats has fewer island restaurants.</li><li>Many places on this page also do takeout; call ahead and pick up on your way back.</li></ul></div>
+      </div>
+    </section>
+    <footer>
+      <p><b>Method.</b> Places, ratings, review counts and hours come from Google Maps listings retrieved in October 2026. Distances are straight-line from the house multiplied by 1.3 for roads, routed around Eagle Harbor for anything on the south side; walking assumes 20 minutes a mile, driving includes a minute to park. Treat them as estimates.</p>
+      <p><b>Not listed:</b> Seabird, which appears in our older guest guidebook, didn't come up in current listings, so check before you go. Places in Bremerton, Poulsbo and Seattle are left out.</p>
+    </footer>
+  </main>
+</div>
+</div>
+
+<script>
+const ROWS = [{"n": "Via Rosa 11", "c": "ita", "t": "Italian deli, market and wine shop near the island's center. Order at the counter; regulars call it the best Italian in the state.", "a": "10320 NE Valley Rd", "lat": 47.6651, "lng": -122.51146, "r": 4.7, "rc": 813, "pl": null, "mi": 3.4, "wk": 68, "dr": 9, "pid": "ChIJ120bMjU8kFQRH0_g5YKGai0", "cl": []}, {"n": "Bruciato", "c": "ita", "t": "Wood-fired pizza and Italian small plates on Winslow Way, with excellent cocktails. Get the meatballs. Weekday dinners only, lunch from Friday.", "a": "236 Winslow Way E", "lat": 47.62496, "lng": -122.5192, "r": 4.4, "rc": 1591, "pl": 2, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJg6muP7c-kFQRqupxMpBYJxQ", "cl": []}, {"n": "Bainbridge Bistro", "c": "ita", "t": "Small Italian-leaning bistro with a seafood bent: lobster risotto, seafood chowder, tiramisu people ferry over for.", "a": "403 Madison Ave N Ste 140", "lat": 47.62735, "lng": -122.5214, "r": 4.8, "rc": 147, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJoSG6JFY_kFQRj3kybesdX54", "cl": ["Mon", "Sun"]}, {"n": "Bene Pizza", "c": "ita", "t": "Friendly, local pizza counter; reviewers rave about the crispy crust and sauce. Easy family dinner.", "a": "937 Hildebrand Ln #104", "lat": 47.63385, "lng": -122.51724, "r": 4.4, "rc": 191, "pl": 1, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJzyCpQqM-kFQRWqZPUHjYYeM", "cl": []}, {"n": "Treehouse Cafe", "c": "ita", "t": "Pizzas, sandwiches and live music at Lynwood Center, next to the old Lynwood Theatre.", "a": "4569 Lynwood Center Rd NE", "lat": 47.60437, "lng": -122.54775, "r": 4.4, "rc": 420, "pl": 2, "mi": 4.0, "wk": 80, "dr": 11, "pid": "ChIJfSG2KBY5kFQRuIUcCOhvTO0", "cl": []}, {"n": "That's A Some Pizza", "c": "ita", "t": "Sourdough-crust pizza by the slice with outdoor seating. Order-taking can be hit or miss.", "a": "9720 Coppertop Loop NE Ste 101", "lat": 47.64848, "lng": -122.52438, "r": 4.2, "rc": 378, "pl": 1, "mi": 2.5, "wk": 50, "dr": 7, "pid": "ChIJcc5E17k-kFQRWP6o63yh0Xk", "cl": []}, {"n": "Hi Life", "c": "jpn", "t": "Hawaiian and Japanese plates, poke and sampler boxes, five minutes from the ferry. Fresh, warm and family-friendly.", "a": "220 Olympic Dr SE", "lat": 47.62415, "lng": -122.51297, "r": 4.8, "rc": 607, "pl": 2, "mi": 1.0, "wk": 20, "dr": 3, "pid": "ChIJa9PEooM_kFQRIg6-cmp1M-Y", "cl": []}, {"n": "SuBI Japanese Restaurant", "c": "jpn", "t": "The island's sit-down sushi restaurant: elegant room, fresh fish, a locals' favorite for celebrations.", "a": "403 Madison Ave N #150", "lat": 47.62735, "lng": -122.5214, "r": 4.5, "rc": 381, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJCfodhLA-kFQR-XZh8WC6zoE", "cl": ["Sun"]}, {"n": "Sushi-Ko", "c": "jpn", "t": "Grab-and-go sushi, gyoza and sunomono. Perfect to take on the ferry or back to the hot tub.", "a": "323 High School Rd NE e2", "lat": 47.63553, "lng": -122.51766, "r": 4.7, "rc": 35, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJC2K2rtM_kFQR_O6YDmnd90E", "cl": ["Sun"]}, {"n": "Nirvana Indian & Nepali", "c": "asia", "t": "Upstairs in the Pavilion, with over 5,500 reviews. Momos, tandoori salmon and tikka masala.", "a": "Upstairs In The Pavilion, 403 Madison Ave N", "lat": 47.62715, "lng": -122.52116, "r": 4.8, "rc": 5582, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJCfodhLA-kFQRYneRSwA1WDs", "cl": []}, {"n": "Ba Sa Restaurant", "c": "asia", "t": "Modern Vietnamese from the team behind Seattle's Ramie. Famous for its chicken. Closed Tuesdays.", "a": "101 Winslow Way E", "lat": 47.62466, "lng": -122.52082, "r": 4.3, "rc": 977, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJH_f5_Kk_kFQR7fnSl1AeRN8", "cl": ["Tue"]}, {"n": "Ginn D Thai Restaurant", "c": "asia", "t": "Neighborhood Thai at Lynwood Center: big portions, curries and stuffed chicken wings.", "a": "4765 Lynwood Center Rd NE #101", "lat": 47.60613, "lng": -122.54789, "r": 4.5, "rc": 175, "pl": 2, "mi": 3.9, "wk": 78, "dr": 10, "pid": "ChIJk9E3Cj45kFQR5ejTEEFOTgg", "cl": []}, {"n": "Sawatdy Thai Cuisine", "c": "asia", "t": "Mid-island Thai with a huge menu and good takeout. Closes 2–4pm between lunch and dinner.", "a": "8770 Fletcher Bay Rd NE", "lat": 47.64259, "lng": -122.56411, "r": 4.4, "rc": 391, "pl": 2, "mi": 4.3, "wk": 86, "dr": 11, "pid": "ChIJP_s6-_Y7kFQReKJKiBe5Ipo", "cl": []}, {"n": "Bainbridge Thai Cuisine", "c": "asia", "t": "Thai by the marina, right off the waterfront trail. Lunch specials are a steal.", "a": "330 Madison Ave S", "lat": 47.62224, "lng": -122.52069, "r": 4.2, "rc": 456, "pl": 1, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJYelmZrY-kFQRXBjGWkIyWAk", "cl": ["Tue"]}, {"n": "Kingfisher", "c": "sea", "t": "Chef-driven oyster bar: local oysters, crudo and the focaccia with miso butter. Oyster happy hour 4–5pm. No reservations, Wed–Sat only.", "a": "133 Winslow Way E", "lat": 47.62464, "lng": -122.52055, "r": 4.5, "rc": 183, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJwTP0T6o_kFQREm-FXU05XP0", "cl": ["Mon", "Tue", "Sun"]}, {"n": "The Islander", "c": "sea", "t": "Steak, seafood and serious cocktails; sit at the bar. A good room for a celebration or a long conversation.", "a": "403 Madison Ave N #130", "lat": 47.62715, "lng": -122.52116, "r": 4.6, "rc": 148, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJQdfiwZ4_kFQR83iPp8rNjf8", "cl": ["Mon", "Sun"]}, {"n": "Sweetwater Tavern", "c": "sea", "t": "Polished seafood tavern with a lively room and well-made gin drinks. Very good with allergies.", "a": "150 Madrone Ln N", "lat": 47.62542, "lng": -122.51942, "r": 4.6, "rc": 120, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJIYq1EwA_kFQRV6TXlTXhMIk", "cl": ["Mon", "Sun"]}, {"n": "Proper Fish", "c": "sea", "t": "British-style fish and chips with malt vinegar, done properly. Casual and quick.", "a": "112 Madison Ave N", "lat": 47.62521, "lng": -122.5206, "r": 4.4, "rc": 1806, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJm167D5w_kFQR2yuaRpjcUnY", "cl": []}, {"n": "Doc's Marina Grill", "c": "sea", "t": "Marina views, clam chowder and fish and chips on the deck. Busy in summer; expect a wait outside.", "a": "403 Madison Ave S", "lat": 47.62233, "lng": -122.52116, "r": 4.2, "rc": 2602, "pl": 2, "mi": 1.6, "wk": 32, "dr": 5, "pid": "ChIJqxZaZLY-kFQRFQYp0EAtG5I", "cl": []}, {"n": "Harbour Public House", "c": "sea", "t": "Historic waterfront pub on Eagle Harbor with water views; seafood specials and a sunny-day patio.", "a": "231 Parfitt Way SW", "lat": 47.62149, "lng": -122.52293, "r": 4.2, "rc": 1563, "pl": 2, "mi": 1.7, "wk": 34, "dr": 5, "pid": "ChIJXcOJxLU-kFQRbfqm0KCmrk4", "cl": ["Mon", "Sun"]}, {"n": "Agate Restaurant", "c": "fine", "t": "Seasonal, locally sourced fine dining next to the art museum. The island's special-occasion room; priced like one.", "a": "500 Winslow Way E #170", "lat": 47.62521, "lng": -122.5149, "r": 4.5, "rc": 256, "pl": 3, "mi": 1.1, "wk": 22, "dr": 4, "pid": "ChIJQcr0mbcikFQRQr9oh6rocKs", "cl": ["Mon", "Sun"]}, {"n": "Amelia Wynn Winery Bistro", "c": "fine", "t": "Winery bistro on Winslow Way. Half-price bottles on Wednesdays, and they'll cork what you don't finish.", "a": "390 Winslow Way E", "lat": 47.62501, "lng": -122.51722, "r": 4.5, "rc": 204, "pl": 2, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJs4AnZ58_kFQRM0FwRkj5hdQ", "cl": ["Mon", "Tue"]}, {"n": "BIMA Bistro", "c": "fine", "t": "Light lunch café inside the art museum. Easy pairing with a gallery visit.", "a": "550 Winslow Way E", "lat": 47.62512, "lng": -122.51454, "r": 4.3, "rc": 46, "pl": 1, "mi": 1.1, "wk": 22, "dr": 4, "pid": "ChIJY6AHyrk-kFQRUMJsF_GQ_sw", "cl": []}, {"n": "Bainbridge Tacos", "c": "mex", "t": "Small, tucked-away taqueria behind Winslow Way. Fresh, fast street tacos; on the pricey side.", "a": "278 Winslow Way E #203", "lat": 47.62512, "lng": -122.5187, "r": 4.7, "rc": 107, "pl": 1, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJabrkzz0_kFQRUS83DWfe14g", "cl": ["Tue"]}, {"n": "Miguelito's Cocina Mexicana", "c": "mex", "t": "Owner-run Mexican with breakfast too. Carne asada and al pastor tacos are the order.", "a": "321 High School Rd NE Ste D-4", "lat": 47.63481, "lng": -122.51748, "r": 4.2, "rc": 233, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJLWxwuqM-kFQRZVYN0slOxrA", "cl": []}, {"n": "Isla Bonita", "c": "mex", "t": "Big, central Mexican spot on Winslow Way, known for fajitas. Reviews are mixed.", "a": "316 Winslow Way E", "lat": 47.62509, "lng": -122.51804, "r": 4.2, "rc": 1002, "pl": 2, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJz1FUY7c-kFQRkD6UHHVnwgI", "cl": []}, {"n": "Casa Rojas", "c": "mex", "t": "Mexican and sports bar in the Pavilion. Reviews are very mixed; better for a drink than dinner.", "a": "403 Madison Ave N #100", "lat": 47.62718, "lng": -122.52123, "r": 4.1, "rc": 221, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJme9JkrA-kFQRBgN_EnhwM8k", "cl": []}, {"n": "San Carlos Restaurant", "c": "mex", "t": "Long-running Mexican with a nice deck, chips and salsa and margaritas. Service reviews are mixed.", "a": "279 Madison Ave N", "lat": 47.62637, "lng": -122.52129, "r": 4.0, "rc": 278, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJG8Mlx7A-kFQRTUKarwPQR4w", "cl": ["Mon"]}, {"n": "Madison Diner", "c": "amer", "t": "1950s train-car diner with big breakfasts, biscuits and fresh orange juice. Pure island charm.", "a": "305 Madison Ave N", "lat": 47.62688, "lng": -122.52125, "r": 4.3, "rc": 910, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJ2w97v7A-kFQRGfUNSyxsd_M", "cl": ["Tue"]}, {"n": "Streamliner Diner", "c": "amer", "t": "Classic island breakfast spot; large portions. Busy when the ferry lands, so go early.", "a": "397 Winslow Way E", "lat": 47.62471, "lng": -122.51689, "r": 4.1, "rc": 828, "pl": 2, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJ6-amfLc-kFQRCJiNkPl5pCE", "cl": []}, {"n": "Café Hitchcock", "c": "amer", "t": "All-day café on Winslow Way for breakfast and lunch with warm service.", "a": "129 Winslow Way E", "lat": 47.62472, "lng": -122.5206, "r": 4.0, "rc": 610, "pl": 2, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJV9DfJbc-kFQRbZLmwLWIJdY", "cl": []}, {"n": "Market Elevated Winslow", "c": "amer", "t": "Sandwiches, salads and a beer garden. Easy lunch outside.", "a": "424 Winslow Way E", "lat": 47.62493, "lng": -122.51648, "r": 4.6, "rc": 53, "pl": 1, "mi": 1.2, "wk": 24, "dr": 4, "pid": "ChIJj_bg7Dk_kFQRfDMeDTRPVIs", "cl": ["Mon", "Tue"]}, {"n": "Emmy's Vege House", "c": "amer", "t": "Beloved vegetarian and vegan Vietnamese-style spot; the curry soup is the one.", "a": "100 Winslow Way W", "lat": 47.62503, "lng": -122.52076, "r": 4.4, "rc": 425, "pl": 1, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJz1FUY7c-kFQRBuXFTG6r0hA", "cl": []}, {"n": "Chez Lolo Patisserie", "c": "cafe", "t": "French patisserie in the Pavilion with the island's best croissants. Thursday to Sunday only; go early.", "a": "403 Madison Ave N STE 260", "lat": 47.62721, "lng": -122.52126, "r": 5.0, "rc": 33, "pl": null, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJfQV25Ds_kFQRmZ9kmemOBcA", "cl": ["Mon", "Tue", "Wed"]}, {"n": "Sweet Dahlia Baking", "c": "cafe", "t": "Bakery café for quiche, sandwiches, soups and donuts. Closed Sundays and Mondays.", "a": "9720 Coppertop Loop NE #103", "lat": 47.64843, "lng": -122.52423, "r": 4.7, "rc": 108, "pl": 1, "mi": 2.5, "wk": 50, "dr": 7, "pid": "ChIJC3j3TyI8kFQReT0KETMORj0", "cl": ["Mon", "Sun"]}, {"n": "Blackbird Bakery", "c": "cafe", "t": "Classic island bakery with great gluten-free options and toast with jam. Tiny and busy at ferry times.", "a": "210 Winslow Way E", "lat": 47.62497, "lng": -122.51948, "r": 4.5, "rc": 955, "pl": 1, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJz1FUY7c-kFQRkh2K1_on-7o", "cl": []}, {"n": "Coquette Bake Shop", "c": "cafe", "t": "Friendly coffee shop and bakery with huge cookies and carrot cake. Good for working a while.", "a": "140 Winslow Way W", "lat": 47.62539, "lng": -122.52211, "r": 4.5, "rc": 468, "pl": 1, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJBYInQLc-kFQRkV0Lru5f1DU", "cl": []}, {"n": "Pegasus Coffee House", "c": "cafe", "t": "Ivy-covered, cozy coffee house by the marina. A favorite first stop off the ferry.", "a": "131 Parfitt Way SW", "lat": 47.62233, "lng": -122.5214, "r": 4.3, "rc": 1286, "pl": 1, "mi": 1.6, "wk": 32, "dr": 5, "pid": "ChIJG1YFY7Y-kFQRHVbh-OTa3-8", "cl": []}, {"n": "By The Glass Wine Bar", "c": "wine", "t": "Wine bar with live music at Lynwood Center. Pair it with a film at the Lynwood Theatre next door.", "a": "4620 Lynwood Center Rd NE Ste 140", "lat": 47.60441, "lng": -122.54722, "r": 4.8, "rc": 55, "pl": null, "mi": 4.0, "wk": 80, "dr": 11, "pid": "ChIJWbWAdT45kFQRqd5I0D551Vo", "cl": []}, {"n": "Fletcher Bay Winery (Winslow tasting room)", "c": "wine", "t": "Island winery's tasting room in Winslow, with live music some nights.", "a": "500 Winslow Way E Suite 130", "lat": 47.62496, "lng": -122.51495, "r": 4.5, "rc": 152, "pl": null, "mi": 1.1, "wk": 22, "dr": 4, "pid": "ChIJd59P0R4_kFQRb4BDFx2dPUk", "cl": []}, {"n": "Fletcher Bay Winery & Barrel Room", "c": "wine", "t": "The winery's barrel room in the Coppertop complex.", "a": "9415 Coppertop Loop NE Unit 102", "lat": 47.64828, "lng": -122.52534, "r": 4.4, "rc": 83, "pl": null, "mi": 2.5, "wk": 50, "dr": 7, "pid": "ChIJl0pmW_M7kFQR5C65ZrniMDU", "cl": []}, {"n": "Bainbridge Island Museum of Art", "c": "mus", "t": "Free contemporary art museum in a striking building near the ferry. A must, even on a short visit.", "a": "550 Winslow Way E", "lat": 47.62514, "lng": -122.51453, "r": 4.7, "rc": 1023, "pl": null, "mi": 1.1, "wk": 22, "dr": 4, "pid": "ChIJ3TF7ybk-kFQRlWDDA1c-6gA", "cl": []}, {"n": "Bainbridge History Museum", "c": "mus", "t": "Small, free and full of island history, including the Japanese-American story. 20–30 minutes.", "a": "215 Ericksen Ave NE", "lat": 47.62588, "lng": -122.51764, "r": 4.7, "rc": 289, "pl": null, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJ32Uo_bk-kFQRO9SZUZO44ys", "cl": []}, {"n": "Bainbridge Island Japanese American Exclusion Memorial", "c": "mus", "t": "A moving memorial where the first Japanese Americans were forcibly removed in 1942. Free, at Pritchard Park.", "a": "4195 Eagle Harbor Dr NE", "lat": 47.61542, "lng": -122.50967, "r": 4.8, "rc": 709, "pl": null, "mi": 2.8, "wk": 56, "dr": 8, "pid": "ChIJy0Ydas4-kFQR9bICwWIKNss", "cl": []}, {"n": "Kids Discovery Museum (KiDiMu)", "c": "kids", "t": "Hands-on children's museum, best for ages 7 and under.", "a": "301 Ravine Ln NE", "lat": 47.62614, "lng": -122.51479, "r": 4.2, "rc": 437, "pl": null, "mi": 1.1, "wk": 22, "dr": 4, "pid": "ChIJQSVrv7k-kFQR_8Ry1UmgT6Q", "cl": ["Mon"]}, {"n": "Bainbridge Performing Arts", "c": "mus", "t": "The island's theater for plays, music and comedy, right in Winslow.", "a": "200 Madison Ave N", "lat": 47.62599, "lng": -122.51837, "r": 4.8, "rc": 136, "pl": null, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJ8-NJfKE-kFQRCWJXRu-Wfiw", "cl": []}, {"n": "Lynwood Theatre", "c": "mus", "t": "Charming vintage single-screen cinema in Lynwood Center.", "a": "4569 Lynwood Center Rd NE", "lat": 47.60413, "lng": -122.54754, "r": 4.6, "rc": 90, "pl": null, "mi": 4.1, "wk": 82, "dr": 11, "pid": "ChIJfSG2KBY5kFQRYxeLJZdETmo", "cl": []}, {"n": "Bainbridge Cinemas", "c": "mus", "t": "First-run movies in the Pavilion.", "a": "403 Madison Ave N #101", "lat": 47.6273, "lng": -122.52163, "r": 4.2, "rc": 244, "pl": null, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJq0Vq-KM-kFQRmjkPLFlyvDw", "cl": []}, {"n": "Bloedel Reserve", "c": "park", "t": "Over 140 acres of world-class gardens: Japanese Garden, Moss Garden, Reflection Pool. Timed tickets; closed Mondays.", "a": "7571 NE Dolphin Dr", "lat": 47.70798, "lng": -122.54712, "r": 4.8, "rc": 2046, "pl": null, "mi": 7.8, "wk": 156, "dr": 20, "pid": "ChIJY2gIKyU9kFQRZTf6TRaLLE0", "cl": ["Mon"]}, {"n": "Hawley Cove Park", "c": "park", "t": "Your nearest beach: a 5-minute walk down Wing Point Way to a boardwalk and Puget Sound shoreline.", "a": "11001 NE Wing Point Way", "lat": 47.6282, "lng": -122.50322, "r": 4.5, "rc": 146, "pl": null, "mi": 0.4, "wk": 8, "dr": 3, "pid": "ChIJRZWvzb8-kFQR7TZ6LIxZZZg", "cl": []}, {"n": "Waterfront Park & City Dock", "c": "park", "t": "Harbor-side park and dock in Winslow, with a waterfront trail to the ferry.", "a": "301 Shannon Dr SE", "lat": 47.62267, "lng": -122.51796, "r": 4.6, "rc": 202, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJny3HSbg-kFQRYzfn438Sdaw", "cl": []}, {"n": "Halls Hill Lookout and Labyrinth", "c": "park", "t": "A short trail to a water view and a beautiful meditation labyrinth. Quiet and romantic.", "a": "NE Halls Hill Rd", "lat": 47.59791, "lng": -122.50384, "r": 4.7, "rc": 349, "pl": null, "mi": 4.3, "wk": 86, "dr": 11, "pid": "ChIJjQUkSNM4kFQRx2CN0s4kshQ", "cl": []}, {"n": "Pritchard Park", "c": "park", "t": "Beach and trails on Eagle Harbor, home to the Exclusion Memorial. Lovely at sunset.", "a": "Eagle Harbor Dr NE", "lat": 47.61542, "lng": -122.50888, "r": 4.5, "rc": 103, "pl": null, "mi": 2.8, "wk": 56, "dr": 8, "pid": "ChIJAQAAHMU-kFQRzO52uJludUk", "cl": []}, {"n": "Battle Point Park", "c": "park", "t": "Big park with ponds, trails, a ferry-boat-shaped fenced playground and an observatory with a giant telescope. A favorite with kids.", "a": "11299 Arrow Point Dr NE", "lat": 47.66212, "lng": -122.57745, "r": 4.7, "rc": 894, "pl": null, "mi": 5.8, "wk": 116, "dr": 15, "pid": "ChIJ7xatt348kFQRohI77VinaDE", "cl": []}, {"n": "Fay Bainbridge Park", "c": "park", "t": "Sandy beach on the island's northeast tip with views of Seattle, Rainier and the Cascades, plus a pirate-ship play structure for kids.", "a": "15446 Sunrise Dr NE", "lat": 47.7032, "lng": -122.50865, "r": 4.6, "rc": 1255, "pl": null, "mi": 6.8, "wk": 136, "dr": 17, "pid": "ChIJ0YRKT249kFQRSYN0_fRbv6A", "cl": []}, {"n": "Fort Ward Park", "c": "park", "t": "Waterfront trail on Rich Passage, old gun batteries and ferries gliding past.", "a": "2241 Pleasant Beach Dr NE", "lat": 47.58829, "lng": -122.5312, "r": 4.6, "rc": 478, "pl": null, "mi": 5.0, "wk": 100, "dr": 13, "pid": "ChIJX6P6huc4kFQRC3hpdijbRbo", "cl": []}, {"n": "Frog Rock", "c": "park", "t": "Painted boulder at a country crossroads; the island's favorite photo stop. Park on the opposite corner.", "a": "14607 Phelps Rd NE", "lat": 47.69575, "lng": -122.52355, "r": 4.5, "rc": 88, "pl": null, "mi": 6.3, "wk": 126, "dr": 16, "pid": "ChIJXwcyHA49kFQR62tMh78iq-4", "cl": []}, {"n": "Eagle Harbor Book Co", "c": "shop", "t": "Excellent independent bookstore on Winslow Way with sharp staff picks.", "a": "157 Winslow Way E", "lat": 47.62464, "lng": -122.52029, "r": 4.8, "rc": 376, "pl": null, "mi": 1.5, "wk": 30, "dr": 5, "pid": "ChIJe-6qJbc-kFQRqLu2eRrkttI", "cl": []}, {"n": "Bainbridge Island Farmers’ Market", "c": "shop", "t": "Saturdays 10am–2pm, spring to December: produce, flowers, bread and live music.", "a": "208 Madison Ave N", "lat": 47.62602, "lng": -122.5193, "r": 4.6, "rc": 125, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJl4atsrA-kFQRN5Y5uB162M8", "cl": []}, {"n": "Town & Country Market", "c": "shop", "t": "The island's beautiful main grocery, with great deli and takeout, open 7am–10pm.", "a": "343 Winslow Way E", "lat": 47.62442, "lng": -122.51785, "r": 4.6, "rc": 1335, "pl": null, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJ7VA9brc-kFQRVwRIrVZkHSc", "cl": []}, {"n": "Bainbridge Island Ferry", "c": "shop", "t": "Ferry to downtown Seattle, about 35 minutes across.", "a": "Ferry Dock", "lat": 47.62336, "lng": -122.51087, "r": 4.6, "rc": 3296, "pl": null, "mi": 0.9, "wk": 18, "dr": 3, "pid": "ChIJjf0ZwgM_kFQREY9dHU-dtB8", "cl": []}, {"n": "Owen's Playground", "c": "kids", "t": "The island's favorite playground, built for kids of all abilities: water pump and sand table, swings, slides and climbing. Bring a towel and spare clothes. Restrooms on site.", "a": "969 Weaver Rd NW", "lat": 47.633446, "lng": -122.531049, "r": 4.8, "rc": 201, "pl": null, "mi": 2.1, "wk": 42, "dr": 6, "pid": "ChIJYy9CMa8-kFQRfPcetE30fOQ", "cl": []}, {"n": "Waterfront Park Playground", "c": "kids", "t": "Small fenced playground for ages 2 to 5, right on Eagle Harbor behind Town & Country. Pair it with the city dock and an ice cream.", "a": "370 Brien Dr SE", "lat": 47.6236403, "lng": -122.517948, "r": 4.8, "rc": 5, "pl": null, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJ3zsROQA_kFQRrrSLP5rJwDI", "cl": []}, {"n": "Madison Tot Lot", "c": "kids", "t": "Quiet, shady toddler lot just north of Winslow, with an easy climbing structure and baby swing. Four parking spots.", "a": "598 Madison Ave N", "lat": 47.6294858, "lng": -122.5199274, "r": 4.3, "rc": 13, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJCZzz7Lo-kFQRvZwtnCxARkQ", "cl": []}, {"n": "Schel Chelb Playground", "c": "kids", "t": "South-end playground across from a beach with water access. Sandpit with trucks to borrow; Lynwood Center is around the corner.", "a": "4541 Point White Dr NE", "lat": 47.6048055, "lng": -122.5508479, "r": 4.4, "rc": 38, "pl": null, "mi": 4.1, "wk": 82, "dr": 11, "pid": "ChIJW_rzdBY5kFQRmTx8fdMxnCs", "cl": []}, {"n": "Bainbridge Island Aquatic Center", "c": "kids", "t": "The rainy-day answer: lazy river, rope swing, diving boards, slide and water spouts. Check the open-swim schedule before you go.", "a": "8521 Madison Ave N", "lat": 47.638161, "lng": -122.522974, "r": 4.6, "rc": 287, "pl": null, "mi": 1.8, "wk": 36, "dr": 5, "pid": "ChIJqTnYaTs8kFQReDuCk6VT8mI", "cl": []}, {"n": "Calico Toy Shoppe", "c": "kids", "t": "Big, well-stocked toy shop on Winslow Way: Lego, games, art supplies, puzzles for rainy afternoons. Open daily 10 to 6.", "a": "290 Winslow Way E", "lat": 47.6251345, "lng": -122.5183722, "r": 4.5, "rc": 110, "pl": null, "mi": 1.3, "wk": 26, "dr": 4, "pid": "ChIJRULlJbc-kFQRHkRVsZkmoPU", "cl": []}, {"n": "Mora Iced Creamery", "c": "kids", "t": "Island-famous ice cream and sorbet with free tastes; a single scoop can be split between two flavors. Cards only, expect a line on sunny days.", "a": "139 Madrone Ln N", "lat": 47.6254905, "lng": -122.519771, "r": 4.7, "rc": 1323, "pl": null, "mi": 1.4, "wk": 28, "dr": 4, "pid": "ChIJpa7b7lc8kFQR7qXC2Cz6D6c", "cl": []}];
+const GROUPS = [
+ {id:'ita', part:'eat', label:'Italian & pizza'},
+ {id:'jpn', part:'eat', label:'Japanese, sushi & poke'},
+ {id:'asia',part:'eat', label:'Indian, Thai & Vietnamese'},
+ {id:'sea', part:'eat', label:'Seafood & Northwest'},
+ {id:'fine',part:'eat', label:'Bistros & fine dining'},
+ {id:'mex', part:'eat', label:'Mexican'},
+ {id:'amer',part:'eat', label:'Diners, brunch & vegetarian'},
+ {id:'cafe',part:'eat', label:'Coffee & bakeries'},
+ {id:'wine',part:'eat', label:'Wine'},
+ {id:'mus', part:'see', label:'Museums, cinema & stage'},
+ {id:'park',part:'see', label:'Gardens, parks & beaches'},
+ {id:'kids',part:'see', label:'Kids, playgrounds & rainy days'},
+ {id:'shop',part:'see', label:'Books, markets & the ferry'}
+];
+const COLOR = id => `var(--c-${id})`;
+ROWS.forEach((x,i)=>x.i=i);
+GROUPS.forEach(g=>{ g.list = ROWS.filter(x=>x.c===g.id).sort((a,b)=>(b.r||0)-(a.r||0) || a.mi-b.mi); g.list.forEach((x,k)=>x.k=k+1); });
+document.getElementById('total').textContent = ROWS.length+' places';
+
+let active='all', maxMi=99, q='';
+/* ---- map ---- */
+const H={lat:47.62807,lng:-122.49680}, KX=69*Math.cos(47.63*Math.PI/180), KY=69, S=70;
+const px = p => [ (p.lng-H.lng)*KX*S, -(p.lat-H.lat)*KY*S ];
+const svg=document.getElementById('map'), NS='http://www.w3.org/2000/svg';
+const el=(t,a,parent)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(parent||svg).appendChild(e);return e;};
+const pts=ROWS.map(px).concat([[0,0]]);
+const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]), P=34;
+const vx=Math.min(...xs)-P, vy=Math.min(...ys)-P, vw=Math.max(...xs)+P+60-vx, vh=Math.max(...ys)+P-vy;
+svg.setAttribute('viewBox',`${vx} ${vy} ${vw} ${vh}`);
+el('rect',{x:vx,y:vy,width:vw,height:vh,fill:'var(--water)'});
+[[1,'1 mi'],[3,'3 mi'],[6,'6 mi']].forEach(([m,l])=>{el('circle',{class:'ring',cx:0,cy:0,r:m*S});
+  const a=[90,-90,-120,-60,-150,150,120].map(d=>d*Math.PI/180).find(a=>{const x=Math.cos(a)*m*S,y=Math.sin(a)*m*S;return x>vx+20&&x<vx+vw-20&&y>vy+16&&y<vy+vh-8;});
+  if(a===undefined) return; const t=el('text',{class:'ringlab',x:Math.cos(a)*m*S,y:Math.sin(a)*m*S-4,'text-anchor':'middle'});t.textContent=l;});
+[['Winslow',-1.25,-.82],['Eagle Harbor',-1.45,.82],['Lynwood Center',-2.4,2.3],['Seattle →',.55,.3]].forEach(([t,x,y])=>{const e=el('text',{class:'place',x:x*S,y:y*S,'text-anchor':'middle'});e.textContent=t;});
+const pins={};
+ROWS.forEach(x=>{
+  const [cx,cy]=px(x); const g=el('g',{class:'pin',tabindex:0,role:'button','aria-label':x.n});
+  g.setAttribute('transform',`translate(${cx},${cy})`);
+  el('circle',{r:5.5,fill:COLOR(x.c)},g); const tt=el('title',{},g); tt.textContent=`${x.n} · ${x.mi} mi`;
+  g.addEventListener('mouseenter',()=>hot(x.i,true)); g.addEventListener('mouseleave',()=>hot(x.i,false));
+  g.addEventListener('click',()=>jump(x.i)); g.addEventListener('keydown',e=>{if(e.key==='Enter'){jump(x.i)}});
+  pins[x.i]=g;
+});
+const home=el('g',{class:'home'}); el('path',{d:'M0,-9 L9,0 L0,9 L-9,0 Z'},home);
+const hl=el('text',{class:'homelab',x:12,y:4}); hl.textContent='your door';
+
+document.getElementById('legend').innerHTML=GROUPS.map(g=>`<span><i style="background:${COLOR(g.id)}"></i>${g.label}</span>`).join('');
+
+/* ---- controls ---- */
+const chips=document.getElementById('chips');
+const mk=(id,label)=>{const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.id=id;b.textContent=label;b.onclick=()=>{active=active===id?'all':id;render();};chips.appendChild(b);};
+mk('all','everything'); mk('eat','all food'); mk('see','all sights');
+GROUPS.forEach(g=>mk(g.id,g.label.split(/[,&]/)[0].trim().toLowerCase()));
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{maxMi=+b.dataset.max;render();});
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();render();});
+
+const gm = x => 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n+', Bainbridge Island, WA')+'&query_place_id='+x.pid;
+const price = n => n ? '$'.repeat(n) : '';
+const trip = x => x.mi<=2 ? `${x.wk} min walk<small>${x.dr} min drive · ${x.mi} mi</small>` : `${x.dr} min drive<small>${x.mi} mi</small>`;
+const closed = x => x.cl.length ? `<small>closed ${x.cl.join(', ')}</small>` : '';
+function render(){
+  chips.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.id===active)));
+  document.querySelectorAll('#seg button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.max===maxMi)));
+  const shown=new Set(); let total=0, html='', lastPart='';
+  GROUPS.filter(g=>active==='all'||active===g.id||active===g.part).forEach(g=>{
+    if(g.part!==lastPart){ html+=`<h2 class="part">${g.part==='eat'?'Eat':'See & do'}</h2>`; lastPart=g.part; }
+    const rows=g.list.filter(x=>x.mi<=maxMi && (!q || (x.n+' '+x.a+' '+x.t).toLowerCase().includes(q)));
+    rows.forEach(x=>shown.add(x.i)); total+=rows.length;
+    const body = rows.length ? rows.map(x=>`<tr data-i="${x.i}">
+      <td class="nm"><span class="num">${x.k}</span><a href="${gm(x)}" target="_blank" rel="noopener">${x.n}</a><span class="sub">${x.a}</span></td>
+      <td class="rt ${x.r>=4.7?'top':''}">${x.r ?? '—'}<small>${x.rc? x.rc.toLocaleString()+' reviews':''}</small></td>
+      <td class="wk">${trip(x)}${closed(x)}</td>
+      <td class="pr">${price(x.pl)}</td>
+      <td>${x.t}</td></tr>`).join('') : `<tr><td class="empty" colspan="5">Nothing here within that distance${q?' matching “'+q+'”':''}.</td></tr>`;
+    html+=`<section class="grp" style="--gc:${COLOR(g.id)}"><div class="grphead"><h2>${g.label}</h2><span class="n">${rows.length} of ${g.list.length}</span></div>
+      <div class="tblwrap"><table><thead><tr><th>place</th><th>Google</th><th>from the house</th><th>$</th><th>why go</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  });
+  document.getElementById('sections').innerHTML=html;
+  document.querySelectorAll('#sections tr[data-i]').forEach(tr=>{const i=+tr.dataset.i;tr.onmouseenter=()=>hot(i,true);tr.onmouseleave=()=>hot(i,false);});
+  ROWS.forEach(x=>{const on=shown.has(x.i);pins[x.i].classList.toggle('dim',!on);pins[x.i].style.pointerEvents=on?'auto':'none';});
+  document.getElementById('count').textContent=total+' listed';
+}
+function hot(i,on){pins[i].classList.toggle('hot',on); if(on) pins[i].parentNode.appendChild(pins[i]); document.querySelectorAll(`#sections tr[data-i="${i}"]`).forEach(tr=>tr.classList.toggle('hot',on));}
+function jump(i){const tr=document.querySelector(`#sections tr[data-i="${i}"]`); if(!tr) return; tr.scrollIntoView({behavior:'smooth',block:'center'}); hot(i,true); setTimeout(()=>hot(i,false),1800);}
+render();
+</script>
+
+</html>
