@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bainbridge Trail Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: a field guide — island hero, a filterable shelf of trail cards with distance/time/difficulty, then one chapter per trail with photo, map and notes. */
+:root{
+  --paper:#F3F5F0; --card:#FFFFFF; --ink:#18231E; --muted:#5B6A62; --fern:#2E6B47; --fern-soft:#DDEBE1; --sound:#2B6E8F; --line:#D6DDD6; --sun:#D9962B;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Figtree","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111714;--card:#18201C;--ink:#E5ECE7;--muted:#9DADA4;--fern:#7CC496;--fern-soft:#1D3326;--sound:#7DBBD8;--line:#2B3630;--sun:#E8B456;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111714;--card:#18201C;--ink:#E5ECE7;--muted:#9DADA4;--fern:#7CC496;--fern-soft:#1D3326;--sound:#7DBBD8;--line:#2B3630;--sun:#E8B456;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.05rem;line-height:1.6;margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+p,ul{margin:0}
+a{color:var(--fern)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+
+.hero{position:relative;color:#fff}
+.hero img{width:100%;height:clamp(260px,46vw,500px);object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,15,.05) 30%,rgba(10,20,15,.72))}
+.hero .wrap{position:absolute;left:0;right:0;bottom:0;z-index:1;padding-block:28px}
+.kicker{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:clamp(2.4rem,6.5vw,4.4rem);font-weight:800;letter-spacing:-.03em;margin-top:6px;max-width:16ch}
+.hero p.sub{margin-top:10px;max-width:56ch;font-size:1.1rem;opacity:.92}
+
+.intro{padding-block:32px 8px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.intro p{color:var(--muted);max-width:60ch}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{font-family:var(--display);font-weight:600;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fern);border-color:var(--fern);color:var(--card)}
+
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding-block:20px 48px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.tcard:hover{border-color:var(--fern)}
+.tcard img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.tcard .b{padding:14px 16px 16px;display:grid;gap:8px}
+.tcard h3{font-size:1.15rem;font-weight:800}
+.stats{display:flex;flex-wrap:wrap;gap:6px}
+.stat{font-family:var(--display);font-size:.8rem;font-weight:600;background:var(--fern-soft);border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums}
+.stat.diff{background:transparent;border:1px solid var(--line)}
+.tcard .why{font-size:.92rem;color:var(--muted)}
+
+.trail{border-top:1px solid var(--line);padding-block:clamp(40px,6vw,72px);scroll-margin-top:12px}
+.trail-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;align-items:end}
+.trail-head h2{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-.02em}
+.trail-head .tag{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sound)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:20px}
+.metrics div{background:var(--card);padding:12px 16px}
+.metrics dt{font-family:var(--display);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.metrics dd{margin:2px 0 0;font-family:var(--display);font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.media{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;margin-top:20px}
+.media img{width:100%;height:100%;max-height:420px;object-fit:cover;border-radius:8px}
+.media .map{object-fit:contain;background:var(--card);border:1px solid var(--line)}
+.body{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);margin-top:24px}
+.body p.ov{max-width:62ch}
+.body h3{font-size:1.05rem;font-weight:700;margin-top:18px}
+.body ul{padding-left:1.15em;margin-top:6px}
+.body li{margin-top:4px}
+.side{display:grid;gap:14px;align-content:start}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.box h3{margin-top:0}
+.why-box{background:var(--fern-soft);border:none}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.links a{font-family:var(--display);font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid var(--fern);border-radius:999px;padding:6px 14px}
+.links a.primary{background:var(--fern);color:var(--card)}
+footer{border-top:1px solid var(--line);padding-block:40px;color:var(--muted);font-size:.92rem}
+.hidden-by-filter{display:none}
+
+@media (max-width:980px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.media,.body{grid-template-columns:minmax(0,1fr)}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.shelf{grid-template-columns:minmax(0,1fr)}}
+</style>
+
+<header class="hero">
+  <img src="img/island.jpg" alt="Aerial view of Bainbridge Island's forests and Puget Sound" width="1200" height="771">
+  <div class="wrap">
+    <p class="kicker">Bainbridge Island · guest trail guide</p>
+    <h1>Eight walks we love on the island</h1>
+    <p class="sub">From a 20-minute ravine to a hidden beach to a three-mile lake loop. Our favorite forest, shoreline and garden trails, with what you'll see and how long to allow.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <p>Pick by mood or time. Each card jumps to the full trail notes, map and directions.</p>
+    <div class="filters" role="group" aria-label="Filter trails">
+      <button type="button" data-f="all" aria-pressed="true">All trails</button>
+      <button type="button" data-f="quick" aria-pressed="false">Under an hour</button>
+      <button type="button" data-f="water" aria-pressed="false">Water views</button>
+      <button type="button" data-f="forest" aria-pressed="false">Deep forest</button>
+      <button type="button" data-f="kids" aria-pressed="false">Easy for kids</button>
+    </div>
+  </div>
+  <div class="shelf" id="shelf"></div>
+  <div id="trails"></div>
+</main>
+
+<footer>
+  <div class="wrap">Trail lengths and times are approximate. Paths can be muddy from fall to spring, and cell service is patchy in the preserves, so download a map before you go. Enjoy the island.</div>
+</footer>
+
+<script>
+var gmaps=function(q){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q+', Bainbridge Island, WA')};
+var T=[
+{id:'gazzam',name:'Gazzam Lake Nature Preserve',tag:'Forest · lake · wetland',img:'gazzam',img2:'gazzam_sign',map:'gazzam_map',
+ dist:'~3.0 mi loop',time:'~1 h 20 min',diff:'Easy to moderate',elev:'Minimal to moderate',tags:['water','forest'],
+ card:'Our top pick: forest, lake and wildlife in one loop.',
+ ov:'One of the largest and most ecologically diverse natural areas on the island. The trails run through dense Pacific Northwest forest, wetlands and a freshwater lake, with a secluded feel and almost no road noise.',
+ see:[['Forest','Towering Douglas fir, western red cedar and hemlock','Ferns, salal and a moss-covered forest floor','Seasonal wildflowers under a dense green canopy'],['Lake and wetlands','A quiet freshwater lake ringed by marsh','Boardwalk sections through damp ground'],['Wildlife','Owls, woodpeckers and other birds','Deer, raccoons and squirrels; eagles and raptors overhead']],
+ allow:['Quick walk: 1–1.5 hours','Leisurely (recommended): 2–2.5 hours','With photo and wildlife stops: up to 3 hours'],
+ tips:['Wear water-resistant shoes; the trails get muddy','Bring binoculars for birdwatching','Early morning and late afternoon are best for wildlife','Cell service is limited, so download the map first'],
+ why:'If you only hike one trail during your stay, make it this one. It has the full range of the island: forest, water and wildlife.',
+ links:[['Directions',gmaps('Gazzam Lake Nature Preserve')]]},
+{id:'grand',name:'Grand Forest West',tag:'Forest · creek',img:'grand',map:'grand_map',
+ dist:'~1.1–1.3 mi main loop',time:'~25–35 min',diff:'Easy',elev:'Minimal',tags:['forest','quick','kids'],
+ card:'The easiest true forest walk on the island.',
+ ov:'One of the most popular and accessible trail systems on the island, part of a larger network of connected forest trails. Mostly flat with gentle hills, through dense evergreen forest, small creeks and wetland.',
+ see:[['Forest','Douglas fir, cedar and maple in a dense canopy','Moss, ferns and native shrubs, green all year'],['Creeks','Wooden bridges over Issei Creek','Small ponds and connector trails to other parks'],['Wildlife','Woodpeckers and songbirds','Deer, squirrels and amphibians in the wetter areas']],
+ allow:['Quick walk: 30–45 minutes','Standard visit: 1–1.5 hours','Full system with connectors: 2–3 hours (2.9–3 mi; 7+ mi linking to Grand Forest East)'],
+ tips:['Great for families, kids and casual walkers','Arrive early; trailhead parking is limited','Wear proper shoes in the wetter months','Dogs welcome on leash'],
+ why:'The best easy-access forest on Bainbridge: a true Pacific Northwest woodland in under an hour.',
+ links:[['AllTrails','https://www.alltrails.com/trail/us/washington/grand-forest-west-main-trail'],['Directions',gmaps('Grand Forest West')]]},
+{id:'blakely',name:'Blakely Harbor Park',tag:'Shoreline · history',img:'blakely',img2:'blakely_beach',map:'blakely_map',
+ dist:'~1.0 mi loop',time:'~20–30 min',diff:'Easy, flat',elev:'Minimal',tags:['water','quick','kids'],
+ card:'Harbor views and mill ruins on an easy flat loop.',
+ ov:'A 40-acre waterfront park on the site of the Port Blakely Mill, once one of the largest sawmills in the world. The loop follows a calm harbor inlet, crosses a bridge over the old mill pond and passes remnants of the island’s industrial past.',
+ see:[['Coast','Views of Blakely Harbor and Puget Sound','Tidal flats and a bridge over the mill pond'],['Meadows and forest','Wide grassy meadows for a picnic','Shaded forest pockets, wetland and lagoon'],['History','Old mill pilings and concrete ruins from the 1800s lumber era'],['Wildlife','Herons, ducks and seabirds; eagles overhead']],
+ allow:['Quick walk: 20–30 minutes','Leisurely visit: 45–60 minutes','With a picnic or photos: 1–2 hours'],
+ tips:['Lovely at sunset','Bring a light jacket; it can be breezy by the water','Watch your footing at high tide or when wet','Combine with Fort Ward for a longer hike'],
+ why:'The best coastal walk on the island if you want views without a long hike.',
+ links:[['AllTrails','https://www.alltrails.com/trail/us/washington/blakely-harbor-park-loop'],['Directions',gmaps('Blakely Harbor Park')]]},
+{id:'bloedel',name:'Bloedel Reserve',tag:'Gardens · forest · ponds',img:'bloedel',img2:'bloedel_moss',map:'bloedel_map',
+ dist:'~1.7–2.4 mi loop',time:'~1.5–2 h recommended',diff:'Easy',elev:'~90–100 ft gain',tags:['forest','water'],
+ card:'A world-class garden walk. Book tickets ahead.',
+ ov:'More than a hike: 140+ acres with over 20 distinct landscapes, designed for slow, reflective walking. The loop moves between forest, meadow, wetland and formal gardens.',
+ see:[['Gardens','The Japanese Garden and guest house','The Reflection Pool, the most photographed spot','The Moss Garden; rhododendrons and fall color in season'],['Forest','Old-growth fir and cedar on quiet shaded paths'],['Water','Swan Pond, Mid Pond and the Bird Marsh','Small streams and bridges'],['Wildlife','Ducks, swans and marsh birds']],
+ allow:['Quick walkthrough: 45–60 minutes','Standard visit (recommended): 1.5–2 hours','Full immersive visit: 2–3 hours'],
+ tips:['Advance timed-entry tickets required','No dogs allowed','Comfortable shoes for gravel and natural paths','Best light early morning or late afternoon; keep voices low','Spring and fall have the best color'],
+ why:'The most beautiful walk on the island, like strolling through a living work of art.',
+ links:[['AllTrails','https://www.alltrails.com/trail/us/washington/bloedel-reserve'],['Directions',gmaps('Bloedel Reserve')]]},
+{id:'fortward',name:'Fort Ward Park',tag:'Beach · forest · history',img:'fortward',img2:'fortward_gate',map:'fortward_map',
+ dist:'~2.0–2.25 mi main loop',time:'~45–60 min',diff:'Easy to moderate',elev:'Light to moderate',tags:['water','forest'],
+ card:'Beach, forest and old gun batteries on Rich Passage.',
+ ov:'A 137-acre coastal park on Rich Passage combining forest trails, shoreline walks and military history. Choose a short beach walk, a forest loop or a longer hike to Blakely Harbor, on paved waterfront paths or natural trails.',
+ see:[['Shoreline','Rich Passage with ferries and boats passing','4,300+ feet of shoreline; beachcombing and tide pools'],['Forest','Moss and fern forest, with ridge and bluff viewpoints'],['History','An early-1900s coastal defense fort','Gun batteries and bunkers, including Battery Thornburgh'],['Wildlife','Seals and the occasional otter offshore; seabirds, deer and squirrels']],
+ allow:['Shoreline walk: 30–45 minutes','Standard visit: 1–1.5 hours','Extended loop to Blakely Harbor (~3.5 mi): 1.5–2 hours'],
+ tips:['Bring layers for changing weather','Visit at low tide for the best shoreline','Great for walking, biking or a picnic','Dogs welcome on leash'],
+ why:'The most complete outing on the island: waterfront, forest and history in one place.',
+ links:[['AllTrails','https://www.alltrails.com/trail/us/washington/fort-ward-hill-trail-loop-to-blakely-harbor'],['Directions',gmaps('Fort Ward Park')]]},
+{id:'tedolson',name:'Ted Olson Nature Preserve',tag:'Quiet forest',img:'tedolson',img2:'tedolson_walk',map:'tedolson_map',
+ dist:'~0.3 mi main loop',time:'~30–60 min',diff:'Easy',elev:'~78 ft gain',tags:['forest','quick','kids'],
+ card:'A 15-acre pocket of forest for a short, peaceful walk.',
+ ov:'A quiet neighborhood forest of about 15 acres, with a central loop and short connecting paths over a gently rolling, shaded hillside that feels tucked away from the roads.',
+ see:[['Forest','Fir and cedar over ferns, salal and moss','Salmonberry and skunk cabbage in the wet spots'],['Wetlands','Small wetland zones within the forest'],['Wildlife','Songbirds and woodpeckers; squirrels, raccoons and the odd deer']],
+ allow:['Quick walk: 20–30 minutes','Relaxed visit: 30–60 minutes','With kids or dogs: about 1 hour (0.6–0.9 mi network)'],
+ tips:['Lovely for a morning or evening walk','Dogs welcome on leash','Rooty and a little muddy; wear proper shoes','Signage is limited, so stay on the main loop'],
+ why:'The best quick escape on the island, for when you want forest without a long hike.',
+ links:[['AllTrails','https://www.alltrails.com/trail/us/washington/ted-olson-loop'],['Directions',gmaps('Ted Olson Nature Preserve')]]},
+{id:'fairydell',name:'Fairy Dell Trail',tag:'Ravine · hidden beach',img:'fairydell',img2:'fairydell_trail',map:'fairydell_map',
+ dist:'~0.5 mi round trip',time:'~20–30 min',diff:'Easy, uneven',elev:'~100 ft gain',tags:['water','forest','quick'],
+ card:'A ravine of footbridges down to a secluded beach.',
+ ov:'A short micro-adventure near Battle Point Park. The trail follows a ravine cut by a seasonal stream, crossing it on small wooden footbridges before opening onto a secluded tidal shore.',
+ see:[['Ravine','Ferns and mossy slopes along a seasonal stream','Wooden footbridges and old fir and cedar stumps'],['Shore','A hidden tidal flat on Puget Sound','Olympic Mountains on clear days and the Agate Pass Bridge','Tide pools at low tide'],['Wildlife','Songbirds in the ravine; seabirds and marine life on the shore']],
+ allow:['Quick walk: 20–30 minutes','Relaxed visit: 30–45 minutes','With beach time: about 1 hour'],
+ tips:['Sturdy shoes; it can be muddy and rooty','Go at low tide for the beach','Stay on the trail; some edges are private property','The bridges are narrow, so cross carefully','Pair it with Battle Point Park'],
+ why:'Forest, creek crossings and a hidden beach in under 30 minutes.',
+ links:[['Directions',gmaps('Fairy Dell Trail')]]},
+{id:'moritani',name:'Moritani Preserve',tag:'Meadow · in town',img:'moritani',map:'moritani_map',
+ dist:'~0.5–1.0 mi',time:'~20–45 min',diff:'Easy',elev:'Minimal',tags:['quick','kids'],
+ card:'A former strawberry farm turned meadow walk in Winslow.',
+ ov:'An 8.5-acre preserve near downtown Winslow, once a strawberry farm, restored as a quiet walking space with meadow, forest paths and interpretive features.',
+ see:[['Meadow','Rolling grassy fields with open views','Sunny spots for a break'],['Forest','Short shaded paths through fir and restored native plants'],['Heritage','A haiku stone garden','Farm elements and signs honoring the island’s Japanese-American farming history'],['Wildlife','Songbirds and small woodland wildlife']],
+ allow:['Quick walk: 20–30 minutes','Relaxed visit: 30–60 minutes','With a picnic: about 1 hour'],
+ tips:['No parking on site; park in Winslow and walk in','Perfect for a morning coffee walk or sunset','Bring a blanket for the meadow','Combine with the Waterfront Trail'],
+ why:'The best in-town nature escape: nature, history and quiet without leaving Winslow.',
+ links:[['Directions',gmaps('Moritani Preserve')]]}
+];
+var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')};
+var shelf=document.getElementById('shelf'), host=document.getElementById('trails');
+T.forEach(function(t){
+  shelf.insertAdjacentHTML('beforeend','<a class="tcard" href="#'+t.id+'" data-tags="'+t.tags.join(' ')+'"><img src="img/'+t.img+'.jpg" alt="'+esc(t.name)+'" loading="lazy"><div class="b"><h3>'+esc(t.name)+'</h3><div class="stats"><span class="stat">'+t.dist+'</span><span class="stat">'+t.time+'</span><span class="stat diff">'+t.diff+'</span></div><p class="why">'+esc(t.card)+'</p></div></a>');
+  var see=t.see.map(function(g){return '<h3>'+g[0]+'</h3><ul>'+g.slice(1).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>'}).join('');
+  var links=t.links.map(function(l,i){return '<a '+(i===0?'class="primary" ':'')+'href="'+l[1]+'" target="_blank" rel="noopener">'+l[0]+'</a>'}).join('');
+  host.insertAdjacentHTML('beforeend',
+  '<section class="trail" id="'+t.id+'" data-tags="'+t.tags.join(' ')+'">'+
+   '<div class="trail-head"><div><p class="tag">'+t.tag+'</p><h2>'+esc(t.name)+'</h2></div><div class="links">'+links+'</div></div>'+
+   '<dl class="metrics"><div><dt>Distance</dt><dd>'+t.dist+'</dd></div><div><dt>Time</dt><dd>'+t.time+'</dd></div><div><dt>Difficulty</dt><dd>'+t.diff+'</dd></div><div><dt>Elevation</dt><dd>'+t.elev+'</dd></div></dl>'+
+   '<div class="media"><img src="img/'+(t.img2||t.img)+'.jpg" alt="On the trail at '+esc(t.name)+'" loading="lazy"><img class="map" src="img/'+t.map+'.jpg" alt="Trail map of '+esc(t.name)+'" loading="lazy"></div>'+
+   '<div class="body"><div><p class="ov">'+esc(t.ov)+'</p>'+see+'</div>'+
+   '<div class="side"><div class="box why-box"><h3>Why we recommend it</h3><p>'+esc(t.why)+'</p></div>'+
+   '<div class="box"><h3>How long to allow</h3><ul>'+t.allow.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div>'+
+   '<div class="box"><h3>Tips</h3><ul>'+t.tips.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div></div></div>'+
+  '</section>');
+});
+var btns=document.querySelectorAll('.filters button');
+btns.forEach(function(b){b.addEventListener('click',function(){
+  btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+  var f=b.dataset.f;
+  document.querySelectorAll('[data-tags]').forEach(function(el){
+    el.classList.toggle('hidden-by-filter', f!=='all' && el.dataset.tags.split(' ').indexOf(f)<0);
+  });
+})});
+</script>
+
+</html>
